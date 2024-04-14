@@ -1,0 +1,53 @@
+{
+    "conversations": [
+        {
+            "question": "apa itu AI",
+            "answer": "AI, atau kecerdasan buatan, adalah cabang ilmu komputer yang berfokus pada pembuatan mesin cerdas yang bisa melakukan tugas yang biasanya memerlukan kecerdasan manusia.",
+            "language": "id",
+            "timestamp": "2023-04-01T12:00:00Z",
+            "feedback": ""
+        },
+        {
+            "question": "bagaimana cara kerja neural networks",
+            "answer": "Jaringan saraf tiruan atau neural networks bekerja dengan menghubungkan lapisan input, satu atau beberapa lapisan tersembunyi, dan lapisan output dengan unit pemrosesan yang disebut neuron. Setiap koneksi, seperti sinapsis dalam otak biologis, memiliki bobot yang dapat disesuaikan selama proses pembelajaran.",
+            "language": "id",
+            "timestamp": "2023-04-01T12:05:00Z",
+            "feedback": ""
+        },
+        {
+            "question": "halo",
+            "answer": "",
+            "language": "id",
+            "timestamp": "2023-04-01T12:10:00Z",
+            "feedback": "benar"
+        },
+        {
+            "question": "halo",
+            "answer": "Halo Juga",
+            "timestamp": "2024-04-14T12:31:22.385239Z",
+            "language": "so",
+            "feedback": ""
+        },
+        {
+            "question": "pendidikan itu apa",
+            "answer": "",
+            "timestamp": "2024-04-14T12:31:49.507140Z",
+            "language": "id",
+            "feedback": "salah"
+        },
+        {
+            "question": "zenon ai adalah",
+            "answer": "",
+            "timestamp": "2024-04-14T12:32:30.529888Z",
+            "language": "id",
+            "feedback": "salah"
+        },
+        {
+            "question": "bagaimana cara kerja neural",
+            "answer": "",
+            "timestamp": "2024-04-14T12:33:52.632894Z",
+            "language": "id",
+            "feedback": "benar"
+        }
+    ]
+}
