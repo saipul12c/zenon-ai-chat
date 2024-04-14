@@ -44,6 +44,9 @@ class ConversationManager:
         self.data = self.load_data()
         self.vectorizer = TfidfVectorizer()
         self.train_vectorizer()
+        self.update_count = 0
+        self.update_threshold = 10  # Melakukan retrain setiap ada 10 perubahan
+
 
     def load_data(self):
         if os.path.exists(self.filepath):
@@ -54,23 +57,42 @@ class ConversationManager:
             self.save_data(data)
             return data
 
-    def save_data(self):
+    def save_data(self, data=None):
+        if data is None:
+            data = self.data
         with open(self.filepath, "w") as file:
-            json.dump(self.data, file, indent=4)
+            json.dump(data, file, indent=4)
 
     def update_conversation(self, question, new_answer, new_feedback):
+        if not new_answer.strip() or not new_feedback.strip():
+            return "Jawaban dan umpan balik tidak boleh kosong."
+
         found = False
+        language = detect(question)  # Mendeteksi bahasa dari pertanyaan yang diberikan
         for conv in self.data['conversations']:
             if conv['question'] == question:
                 conv['answer'] = new_answer
                 conv['feedback'] = new_feedback
+                conv['language'] = language  # Memperbarui bahasa juga
                 found = True
                 break
         if not found:
             timestamp = datetime.datetime.utcnow().isoformat() + 'Z'
-            self.data['conversations'].append({'question': question, 'answer': new_answer, 'timestamp': timestamp, 'feedback': new_feedback, 'language': detect(question)})
-        self.save_data()
-        self.train_vectorizer()
+            self.data['conversations'].append({
+                'question': question,
+                'answer': new_answer,
+                'timestamp': timestamp,
+                'feedback': new_feedback,
+                'language': language  # Memastikan bahasa disertakan saat menambahkan baru
+            })
+
+            self.save_data()
+            self.update_count += 1  # Pastikan ini di luar blok if `found`
+            if self.update_count >= self.update_threshold:
+                self.train_vectorizer()
+                self.update_count = 0
+
+            return "Data berhasil diperbarui."
 
     def train_vectorizer(self):
         if self.data["conversations"]:
@@ -97,19 +119,15 @@ def preprocess(text, language='en'):
     return " ".join(filtered_words)
 
 def generate_response_from_context(question, language='en'):
-    stop_words = set(stopwords.words(language))
     lemmatizer = WordNetLemmatizer()
-
-    # Tokenisasi dan lemmatisasi pertanyaan
+    stop_words = set(stopwords.words(language))
     words = [lemmatizer.lemmatize(word) for word in word_tokenize(question.lower()) if word.isalnum() and word not in stop_words]
-
     relevant_responses = []
 
     # Cari kalimat dalam data yang memiliki kata kunci yang banyak sama
     for conv in conv_manager.data['conversations']:
         conv_words = set([lemmatizer.lemmatize(word) for word in word_tokenize(conv['question'].lower()) if word.isalnum() and word not in stop_words])
         common_words = conv_words.intersection(words)
-
         if common_words:
             score = len(common_words)
             relevant_responses.append((score, conv['answer'], conv['question']))
@@ -123,29 +141,28 @@ def generate_response_from_context(question, language='en'):
     best_question = relevant_responses[0][2]
 
     # Membuat kalimat baru berdasarkan struktur kalimat pertanyaan dan jawaban terbaik
-    new_response = reconstruct_response(best_response, question, best_question, words)
-    return new_response
+    return reconstruct_response(best_response, question, best_question)
 
-def get_synonyms(word):
+def get_synonyms(word, pos=None):
+    lemmatizer = WordNetLemmatizer()
+    word = lemmatizer.lemmatize(word)
+    
     synonyms = set()
-    for syn in wordnet.synsets(word):
+    for syn in wordnet.synsets(word, pos=pos if pos else None):
         for lemma in syn.lemmas():
-            synonyms.add(lemma.name())
+            normalized_lemma = lemma.name().replace('_', ' ').lower()
+            synonyms.add(normalized_lemma)
     return synonyms
 
 def reconstruct_response(best_response, user_question, best_matched_question):
     tokenized_best_response = word_tokenize(best_response.lower())
     tokenized_user_question = word_tokenize(user_question.lower())
     tokenized_best_matched_question = word_tokenize(best_matched_question.lower())
-
-    # Buat kamus sinonim untuk kata-kata dalam pertanyaan terbaik
     synonyms_map = {word: get_synonyms(word) for word in tokenized_best_matched_question}
-
-    # Cari kata terdekat dalam pertanyaan pengguna untuk setiap kata dalam jawaban
     new_response = []
+
     for word in tokenized_best_response:
         if word in synonyms_map:
-            # Cari kata terbaik yang bisa menggantikan berdasarkan sinonimnya
             best_match = None
             for synonym in synonyms_map[word]:
                 if synonym in tokenized_user_question:
@@ -155,14 +172,12 @@ def reconstruct_response(best_response, user_question, best_matched_question):
         else:
             new_response.append(word)
 
-    # Gabungkan kembali menjadi kalimat
     return ' '.join(new_response)
-
 def get_response(user_input):
     try:
         language = detect(user_input)
     except LangDetectException:
-        language = "en"
+        language = "en"  # Gunakan Bahasa Inggris sebagai default jika deteksi gagal
 
     processed_input = preprocess(user_input, language)
     if not conv_manager.data["conversations"]:
@@ -174,9 +189,11 @@ def get_response(user_input):
     similarity = cosine_similarity(vectors, question_vectors)
 
     max_sim = max(similarity[0])
-    if max_sim > 0.4:
+    if max_sim > 0.4:  # Pertimbangkan untuk menyesuaikan threshold ini berdasarkan analisis lebih lanjut
         index = np.argmax(similarity)
-        return conv_manager.data["conversations"][index]["answer"]
+        best_match = conv_manager.data["conversations"][index]
+        additional_info = f"Jawaban ini didasarkan pada pertanyaan serupa: '{best_match['question']}'"
+        return f"{best_match['answer']} (Info: {additional_info})"
     else:
         new_response = generate_response_from_context(user_input, language)
         if new_response:
@@ -206,19 +223,32 @@ def ask():
         logging.error("No input provided by the user.")
         return jsonify({"error": "No input provided"}), 400
     
-    # Tambahkan log untuk melihat input pengguna
     logging.info(f"Received user input: {user_input}")
 
-    if len(user_input) < 1 or len(user_input) > 2000:
+    if len(user_input) > 2000:
         logging.error("Invalid input length.")
-        return jsonify({"error": "Input is too long or too short"}), 400
+        return jsonify({"error": "Input is too long"}), 400
 
     try:
         response = get_response(user_input)
-        conv_manager.add_conversation(user_input, response, detect(user_input))
-        # Log the generated response
-        logging.info(f"Generated response: {response}")
-        return jsonify({"response": response, "language": detect(user_input)}), 200
+        language = detect(user_input)
+        conv_manager.add_conversation(user_input, response, language)
+
+        # Evaluasi respon jika memungkinkan
+        possible_matches = [conv for conv in conv_manager.data["conversations"] if conv["question"] == user_input]
+        if possible_matches:
+            reference_response = possible_matches[0]['answer']
+            # Hanya hitung skor jika ada perubahan jawaban
+            if 'last_updated' not in possible_matches[0] or (datetime.datetime.utcnow() - possible_matches[0]['last_updated']).total_seconds() > 3600:
+                bleu_score = calculate_bleu(reference_response, response)
+                rouge_score = calculate_rouge(reference_response, response)
+                possible_matches[0]['last_updated'] = datetime.datetime.utcnow()
+                logging.info(f"Evaluation - BLEU: {bleu_score}, ROUGE: {rouge_score['rouge-l']['f']}")
+            else:
+                bleu_score = rouge_score = "N/A"
+
+            return jsonify({"response": response, "language": language, "BLEU": bleu_score, "ROUGE": rouge_score}), 200
+        return jsonify({"response": response, "language": language}), 200
     except Exception as e:
         logging.error(f"Error in processing the user input: {e}")
         return jsonify({"error": "An error occurred while processing your request"}), 500
@@ -226,13 +256,28 @@ def ask():
 @app.route("/feedback", methods=["POST"])
 def feedback():
     data = request.get_json()
-    user_question = data.get("question")
-    user_feedback = data.get("feedback")
-    if not user_question or not user_feedback:
-        return jsonify({"error": "Question and feedback must be provided"}), 400
+    user_question = data.get("question", "").strip()
+    user_feedback = data.get("feedback", "").strip()
 
+    if not user_question or not user_feedback:
+        return jsonify({"error": "Both question and feedback must be provided and cannot be empty"}), 400
+
+    # Update conversation with new feedback and recalculate BLEU/ROUGE scores
     conv_manager.update_conversation(user_question, "", user_feedback)
-    return jsonify({"message": "Feedback received and conversation updated. Thank you!"}), 200
+    all_conv = [conv for conv in conv_manager.data["conversations"] if conv["question"] == user_question]
+    if all_conv:
+        updated_response = all_conv[0]["answer"]
+        new_bleu_score = calculate_bleu(updated_response, user_feedback)
+        new_rouge_score = calculate_rouge(updated_response, user_feedback)
+        logging.info(f"Updated Evaluation - BLEU: {new_bleu_score}, ROUGE: {new_rouge_score['rouge-l']['f']}")
+
+        return jsonify({
+            "message": "Feedback received and conversation updated. Thank you!",
+            "BLEU": new_bleu_score,
+            "ROUGE": new_rouge_score
+        }), 200
+    else:
+        return jsonify({"error": "No matching question found in the database."}), 404
 
 if __name__ == "__main__":
     app.run(debug=True)

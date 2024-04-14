@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    // Event Handler untuk tombol Enter pada input pengguna
     $('#user-input').on('keydown', function(e) {
         if (e.which === 13 && !e.shiftKey) {
             e.preventDefault();
@@ -6,9 +7,10 @@ $(document).ready(function() {
         }
     });
 
+    // Mengirimkan pertanyaan pengguna
     async function sendQuestion() {
         const userInput = $('#user-input').val().trim();
-        if (userInput !== '') {
+        if (userInput) {
             showLoading(true);
             try {
                 const response = await $.ajax({
@@ -30,6 +32,7 @@ $(document).ready(function() {
         }
     }
 
+    // Menambahkan formulir feedback
     function appendFeedbackForm(question) {
         const feedbackFormHtml = `
             <div class="feedback-form">
@@ -39,20 +42,19 @@ $(document).ready(function() {
         $('#chat-output').append(feedbackFormHtml);
     }
 
+    // Mengirim feedback pengguna
     async function sendFeedback(question, buttonElement) {
-        const feedbackInput = $(buttonElement).prev('.feedback-input');
-        const feedbackForm = $(buttonElement).parent('.feedback-form');
-        const userFeedback = feedbackInput.val().trim();
-        if (userFeedback) {
+        const feedbackInput = $(buttonElement).prev('.feedback-input').val().trim();
+        if (feedbackInput) {
             try {
                 const response = await $.ajax({
                     url: '/feedback',
                     method: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify({ question: question, feedback: userFeedback })
+                    data: JSON.stringify({ question, feedback: feedbackInput })
                 });
                 alert('Feedback terkirim: ' + response.message);
-                feedbackForm.remove(); // Menghilangkan form feedback
+                $(buttonElement).parent('.feedback-form').remove();
             } catch (error) {
                 showError('Gagal mengirim feedback: ' + error.statusText);
             }
@@ -61,27 +63,29 @@ $(document).ready(function() {
         }
     }
 
+    // Menampilkan pesan kesalahan server
     function handleServerError(error) {
-        const errorMessage = error.responseJSON && error.responseJSON.error ? error.responseJSON.error : error.statusText;
+        const errorMessage = error.responseJSON?.error || error.statusText;
         showError(`Gagal memproses permintaan Anda: ${escapeHtml(errorMessage)}`);
     }
 
+    // Menampilkan pesan di chat
     function displayMessage(message, className) {
         const chatOutput = $('#chat-output');
-        const messageElement = $(`<div class="${className}"></div>`);
-        chatOutput.append(messageElement);
-    
+        const messageElement = $(`<div class="${className}"></div>`).appendTo(chatOutput);
+        
         let i = 0;
         function typing() {
             if (i < message.length) {
                 messageElement.html(messageElement.html() + escapeHtml(message[i]));
                 i++;
-                setTimeout(typing, 50); // Mengatur kecepatan mengetik
+                setTimeout(typing, 50);
             }
         }
         typing();
-    }    
+    }
 
+    // Menampilkan atau menghilangkan indikator loading
     function showLoading(isLoading) {
         if (isLoading) {
             $('#chat-output').append('<div id="loading">Loading...</div>');
@@ -90,23 +94,27 @@ $(document).ready(function() {
         }
     }
 
+    // Menampilkan pesan error
     function showError(message) {
         $('#chat-output').append(`<div class="error">${message}</div>`);
     }
 
+    // Gulir chat ke bawah
     function scrollChatToBottom() {
         $('#chat-output').scrollTop($('#chat-output')[0].scrollHeight);
     }
 
+    // Mencegah XSS dengan meng-escape karakter HTML
     function escapeHtml(text) {
-        return text
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+        return text.replace(/[&<>"']/g, match => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        })[match]);
     }
 
     window.sendQuestion = sendQuestion;
-    window.sendFeedback = sendFeedback; // Menjadikan fungsi sendFeedback tersedia secara global
+    window.sendFeedback = sendFeedback;
 });

@@ -9,13 +9,16 @@
 <body>
     <div class="chat-container">
         <div id="chat-output" class="chat-output"></div>
-        <!-- Input untuk pertanyaan user -->
+        <!-- Input untuk pertanyaan pengguna -->
         <div class="input-area">
-            <input type="text" id="user-input" placeholder="Tanya sesuatu..." autofocus>
+            <textarea id="user-input" placeholder="Tanya sesuatu..." autofocus rows="1"></textarea>
             <button onclick="sendQuestion()">Kirim</button>
         </div>
     </div>
+
+    <!-- jQuery diunduh dari CDN untuk memastikan kita menggunakan versi yang terbaru dan stabil -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Script internal untuk memproses interaksi chat -->
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

@@ -1,67 +1,90 @@
-/* style.css */
+/* Styling dasar untuk keseluruhan halaman dan container chat */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
     margin: 0;
     padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9; /* Warna latar belakang halaman */
+    height: 100vh; /* Membuat halaman selalu mengisi seluruh tinggi viewport */
     display: flex;
-    justify-content: center;
     align-items: center;
-    height: 100vh;
+    justify-content: center;
 }
 
 .chat-container {
     width: 90%;
     max-width: 600px;
-    background: white;
-    border: 1px solid #ccc;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     overflow: hidden;
-}
-
-.chat-output {
-    height: 400px;
-    overflow-y: scroll;
-    padding: 20px;
-    border-bottom: 1px solid #ccc;
-}
-
-.input-area {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Menambah shadow untuk sedikit depth */
     display: flex;
-    padding: 10px;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #ffffff; /* Warna latar chat container */
 }
 
-.input-area input[type="text"] {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-right: 10px;
+/* Styling untuk output dari chat */
+.chat-output {
+    padding: 20px;
+    height: 400px; /* Atur tinggi area chat */
+    overflow-y: scroll; /* Memastikan bisa discroll jika pesan terlalu banyak */
 }
 
-.input-area button {
-    padding: 10px 20px;
-    background-color: #007BFF;
-    color: white;
+/* Styling untuk area input */
+.input-area {
+    border-top: 1px solid #ddd; /* Pembatas antara area chat dan input */
+    padding: 10px;
+    display: flex;
+    justify-content: space-between; /* Memberikan ruang antara textarea dan button */
+    position: fixed; /* Membuat input area melayang */
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%); /* Pusatkan di bawah */
+    width: 90%; /* Lebar sesuai container */
+    box-sizing: border-box; /* Border dan padding dihitung ke dalam width */
+    background-color: #fff; /* Sama seperti container chat */
+}
+
+textarea {
+    width: 85%; /* Memberi lebar untuk textarea */
+    resize: none; /* Menghilangkan fungsi resize */
     border: none;
-    border-radius: 4px;
-    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px; /* Memberi sedikit lengkungan pada sudut */
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); /* Menambahkan sedikit depth pada textarea */
 }
 
-.input-area button:hover {
-    background-color: #0056b3;
+button {
+    width: 10%; /* Mengatur lebar button */
+    background-color: #007BFF; /* Warna latar button */
+    color: white; /* Warna teks button */
+    border: none;
+    padding: 10px;
+    cursor: pointer; /* Cursor berubah saat di hover */
+    border-radius: 4px; /* Memberi sedikit lengkungan pada sudut */
+}
+
+button:hover {
+    background-color: #0056b3; /* Warna button saat di-hover */
 }
 
 .error {
-    color: red;
-    padding: 5px;
+    color: #ff4757; /* Merah yang lebih lembut */
+    background-color: #ffebee; /* Latar belakang merah muda sangat lembut */
+    padding: 10px;
+    margin: 10px 20px; /* Menambahkan margin agar tidak terlalu dekat dengan tepi */
+    border-radius: 4px; /* Membuat sudut sedikit bulat */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Menambahkan sedikit bayangan */
+    text-align: center; /* Teks di tengah untuk menarik perhatian */
 }
 
 .feedback-form {
     margin-top: 10px;
+    padding: 10px 20px; /* Menambahkan padding */
     display: flex;
     justify-content: space-between;
+    background-color: #f8f9fa; /* Warna latar yang lembut */
+    border-radius: 4px; /* Sudut yang bulat */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Bayangan untuk menonjolkan */
 }
 
 .feedback-input {
@@ -69,10 +92,54 @@ body {
     margin-right: 10px;
     padding: 8px;
     border: 1px solid #ccc;
+    border-radius: 4px; /* Sudut yang bulat */
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); /* Menambahkan depth */
+}
+
+button {
+    /* Menyesuaikan button yang sudah didefinisikan sebelumnya */
+    background-color: #007BFF; /* Warna latar biru */
+    color: white; /* Warna teks putih */
+    border: none;
+    padding: 10px;
+    cursor: pointer;
     border-radius: 4px;
+    width: auto; /* Memungkinkan lebar mengikuti konten dalamnya */
+}
+
+button:hover {
+    background-color: #0056b3; /* Warna lebih gelap saat di-hover */
 }
 
 #loading {
     text-align: center;
     padding: 20px;
+    color: #007BFF; /* Sesuai dengan warna button */
+    font-weight: bold; /* Teks lebih tebal */
+}
+
+@media (max-width: 600px) {
+    .chat-container {
+        width: 100%;
+        max-width: 100%; /* Mengisi lebar perangkat */
+    }
+
+    .input-area {
+        width: 100%; /* Mengisi lebar perangkat */
+        padding: 10px; /* Menyesuaikan padding */
+    }
+
+    textarea, button {
+        width: 100%; /* Lebar penuh untuk komponen di area input */
+        margin-top: 5px; /* Memberi ruang antara elemen */
+    }
+
+    textarea {
+        width: calc(100% - 20px); /* Mengurangi lebar karena padding */
+    }
+
+    button {
+        width: auto; /* Mengembalikan pengaturan lebar otomatis */
+        padding: 8px 20px; /* Menyesuaikan padding */
+    }
 }
