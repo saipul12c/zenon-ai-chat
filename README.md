@@ -1,6 +1,5 @@
 ### Zenon AI Chat
 
-#### Deskripsi Singkat
 Zenon AI Chat adalah sebuah aplikasi chatbot yang dirancang untuk memberikan respons otomatis kepada pengguna berdasarkan input yang mereka masukkan. Chatbot ini menggunakan teknologi machine learning dan natural language processing untuk memahami dan merespons pertanyaan dengan cara yang relevan dan informatif.
 
 #### Fitur
@@ -33,7 +32,7 @@ Zenon AI Chat adalah sebuah aplikasi chatbot yang dirancang untuk memberikan res
 ##### Langkah Instalasi:
 1. **Klon Repositori**:
    ```bash
-   git clone https://github.com/yourusername/zenon-ai-chat.git
+   git clone https://github.com/Saipul12c/zenon-ai-chat.git
    cd zenon-ai-chat
    ```
 2. **Menginstal Dependensi**:
@@ -43,6 +42,7 @@ Zenon AI Chat adalah sebuah aplikasi chatbot yang dirancang untuk memberikan res
 3. **Menjalankan Aplikasi**:
    ```bash
    flask run
+   Python app.py
    ```
 
 ##### Dependensi:
