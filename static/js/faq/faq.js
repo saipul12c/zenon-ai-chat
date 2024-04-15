@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    fetch('faq.json')
+    fetch('static/js/faq/faq.json')
     .then(response => response.json())
     .then(data => {
         faqs = data.sort((a, b) => b.popularity - a.popularity);

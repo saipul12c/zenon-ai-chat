@@ -164,6 +164,17 @@ button:hover {
     background-color: #f0f0f0;
 }
 
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #007BFF;
+    color: white;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
 @media (max-width: 600px) {
     .chat-container {
         width: 100%;
