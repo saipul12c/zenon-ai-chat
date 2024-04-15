@@ -1,0 +1,26 @@
+[
+    {
+        "question": "Bagaimana cara mengganti password saya?",
+        "answer": "Anda dapat mengganti password Anda melalui halaman pengaturan akun. Klik pada opsi 'Ganti Password', masukkan password lama dan yang baru, kemudian simpan perubahan."
+    },
+    {
+        "question": "Apa yang harus saya lakukan jika saya lupa password?",
+        "answer": "Jika Anda lupa password, Anda dapat meresetnya dengan mengklik tautan 'Lupa Password' di halaman login. Ikuti instruksi yang diberikan untuk mendapatkan password baru."
+    },
+    {
+        "question": "Bagaimana cara membatalkan langganan?",
+        "answer": "Untuk membatalkan langganan, silakan akses halaman langganan di akun Anda dan klik 'Batalkan Langganan'. Anda akan diminta untuk mengonfirmasi pilihan sebelum langganan Anda dibatalkan."
+    },
+    {
+        "question": "Bagaimana saya bisa menghubungi dukungan pelanggan?",
+        "answer": "Anda bisa menghubungi dukungan pelanggan kami melalui email di support@contoh.com, atau melalui telepon di 1-800-123-4567. Kami tersedia 24/7."
+    },
+    {
+        "question": "Dimana saya bisa melihat riwayat pembelian saya?",
+        "answer": "Riwayat pembelian Anda dapat dilihat di halaman 'Riwayat Pembelian' di dalam akun Anda. Halaman ini menyediakan detail semua pembelian yang telah Anda lakukan."
+    },
+    {
+        "question": "Bagaimana cara mengupdate informasi pribadi saya?",
+        "answer": "Anda dapat mengupdate informasi pribadi Anda melalui halaman profil Anda. Klik 'Edit Profil' dan Anda akan bisa mengubah informasi seperti nama, alamat email, dan nomor telepon."
+    }
+]

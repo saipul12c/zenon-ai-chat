@@ -1,0 +1,141 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+h1 {
+    color: #007BFF;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.search-box {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+.search-box input[type="text"] {
+    width: 70%;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 5px 0 0 5px;
+    outline: none;
+}
+.search-box button {
+    padding: 10px;
+    border: none;
+    background: #007BFF;
+    color: white;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+}
+.question {
+    font-weight: bold;
+    margin-top: 20px;
+    cursor: pointer;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #f5f5f5;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s;
+}
+.question:hover {
+    background-color: #e9ecef;
+}
+.answer {
+    display: none;
+    margin-left: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-left: 3px solid #007BFF;
+    margin-top: 5px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+ul {
+    padding-left: 20px;
+}
+li {
+    line-height: 1.6;
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+}
+.pagination li {
+    margin: 5px;
+    padding: 5px 10px;
+    border: 1px solid #007BFF;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.pagination li.active {
+    background-color: #007BFF;
+    color: white;
+}
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #007BFF;
+    color: white;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Animasi untuk jawaban ketika dibuka */
+.open {
+    animation: slideDown 300ms ease-out forwards;
+}
+
+/* Keyframes untuk animasi slide down */
+@keyframes slideDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Styling untuk pagination */
+#pagination {
+    list-style-type: none;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+}
+
+#pagination li {
+    margin: 0 5px;
+    cursor: pointer;
+    padding: 5px 10px;
+    background-color: #eee;
+    border-radius: 5px;
+}
+
+#pagination li.active {
+    background-color: #007BFF;
+    color: white;
+}
+
+/* Styling untuk error */
+.error {
+    color: #D8000C;
+    background-color: #FFBABA;
+    padding: 10px;
+    margin-top: 20px;
+    border-radius: 5px;
+}

@@ -4,6 +4,7 @@ import os
 import datetime
 import random
 import logging
+import nltk
 
 # Impor library untuk matematika dan data handling
 import numpy as np
@@ -46,7 +47,6 @@ class ConversationManager:
         self.train_vectorizer()
         self.update_count = 0
         self.update_threshold = 10  # Melakukan retrain setiap ada 10 perubahan
-
 
     def load_data(self):
         if os.path.exists(self.filepath):
@@ -214,6 +214,18 @@ def calculate_rouge(reference, candidate):
 @app.route("/")
 def index():
     return render_template("index.html")
+
+@app.route('/help-faq')
+def help_faq():
+    return render_template('faq/help_faq.html')
+
+@app.route('/release-note')
+def release_note():
+    return render_template('note/release_note.html')
+
+@app.route('/terms-policies')
+def terms_policies():
+    return render_template('polices/terms_policies.html')
 
 @app.route("/ask", methods=["POST"])
 def ask():

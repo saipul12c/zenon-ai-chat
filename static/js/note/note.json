@@ -1,0 +1,11 @@
+{
+    "latest": {
+        "version": "1.2.0",
+        "date": "15 April 2024",
+        "changes": [
+            "Fitur baru 1",
+            "Fitur baru 2",
+            "Perbaikan bug"
+        ]
+    }
+}

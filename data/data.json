@@ -48,6 +48,20 @@
             "timestamp": "2024-04-14T12:33:52.632894Z",
             "language": "id",
             "feedback": "benar"
+        },
+        {
+            "question": "halo",
+            "answer": " (Info: Jawaban ini didasarkan pada pertanyaan serupa: 'halo')",
+            "timestamp": "2024-04-14T23:42:41.832400Z",
+            "language": "so",
+            "feedback": ""
+        },
+        {
+            "question": "halo",
+            "answer": " (Info: Jawaban ini didasarkan pada pertanyaan serupa: 'halo')",
+            "timestamp": "2024-04-15T00:46:08.614526Z",
+            "language": "so",
+            "feedback": ""
         }
     ]
 }

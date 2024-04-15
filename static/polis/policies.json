@@ -1,0 +1,20 @@
+[
+    {
+        "title": "Acceptable Use",
+        "content": [
+            "Your use of our website and app is subject to the following terms and conditions. By accessing and using our website and app, you agree to be bound by these terms and conditions. If you do not agree to these terms and conditions, you should not use our website or app.",
+            "You may use our website and app only for lawful purposes and in accordance with these terms and conditions. You agree not to use our website and app in any way that is unlawful, harmful, or infringes on the rights of others."
+        ]
+    },
+    {
+        "title": "Restricted Behavior",
+        "content": [
+            "The following behavior is strictly prohibited on our website and app:",
+            "Harassment or bullying of other users",
+            "Posting or sharing inappropriate or offensive content",
+            "Violating the privacy of other users",
+            "Engaging in any illegal activity"
+        ]
+    }
+    // Lanjutkan dengan bagian lain sesuai contoh
+]

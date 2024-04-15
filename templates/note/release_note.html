@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Release Note</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/note/note.css') }}">
+</head>
+<body>
+    <h1>Catatan Rilis</h1>
+    <div id="latestRelease" class="release latest" onclick="toggleDescription(this)"></div>
+    <footer>
+        &copy; 2024 Perusahaan Anda. Semua Hak Cipta.
+    </footer>
+    <script src="{{ url_for('static', filename='js/note/note.js') }}"></script>
+</body>
+</html>

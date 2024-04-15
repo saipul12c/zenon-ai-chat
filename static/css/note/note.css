@@ -1,0 +1,53 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+    margin: 0;
+}
+h1 {
+    text-align: center;
+    color: #444;
+}
+.release {
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer; /* Tambahkan cursor pointer untuk indikasi bisa diklik */
+}
+.release:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+.release.latest {
+    border-color: #36a0ff;
+    background-color: #e8f0fe;
+}
+.release-title {
+    font-weight: bold;
+    font-size: 24px;
+}
+.release-date {
+    font-size: 16px;
+    color: #888;
+    margin-bottom: 20px;
+}
+.release-description {
+    margin-left: 20px;
+    padding-left: 20px;
+    border-left: 3px solid #36a0ff;
+    display: none; /* Awalnya disembunyikan */
+}
+footer {
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+    border-top: 1px solid #ddd;
+}

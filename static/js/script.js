@@ -7,6 +7,27 @@ $(document).ready(function() {
         }
     });
 
+    // Menghandle klik pada tombol untuk menampilkan/menyembunyikan konten bantuan
+    $('.help-button').click(function(event) {
+        event.stopPropagation(); // Menghentikan event dari bubbling ke elemen lain
+        $('.help-content').toggle(); // Menampilkan atau menyembunyikan konten
+    });
+
+    // Menghandle penekanan tombol keyboard pada tombol bantuan (enter dan spasi)
+    $('.help-button').keypress(function(event) {
+        if (event.key === "Enter" || event.key === " ") { // "Enter" atau spasi
+            $(this).click();
+            event.preventDefault(); // Mencegah scroll halaman jika menekan spasi
+        }
+    });
+
+    // Optional: Menutup pop-up jika klik di luar area konten bantuan
+    $(document).click(function(event) {
+        if (!$(event.target).closest('.help-button, .help-content').length) {
+            $('.help-content').hide();
+        }
+    });
+
     // Mengirimkan pertanyaan pengguna
     async function sendQuestion() {
         const userInput = $('#user-input').val().trim();

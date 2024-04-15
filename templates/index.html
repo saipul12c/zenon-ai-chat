@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zenon AI Chat</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <div class="chat-container">
@@ -16,9 +16,20 @@
         </div>
     </div>
 
+    <div class="help-button">
+        ?
+    </div>
+    <div class="help-content">
+        <ul>
+            <li><a href="/help-faq">Help & FAQ</a></li>
+            <li><a href="/release-note">Release Notes</a></li>
+            <li><a href="/terms-policies">Terms & Policies</a></li>
+        </ul>
+    </div>   
+
     <!-- jQuery diunduh dari CDN untuk memastikan kita menggunakan versi yang terbaru dan stabil -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- Script internal untuk memproses interaksi chat -->
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>
