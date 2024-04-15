@@ -19,6 +19,7 @@ from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 from nltk.translate.bleu_score import sentence_bleu
 from nltk.corpus import wordnet
+from translate import Translator
 
 # Impor library sklearn untuk feature extraction dan cosine similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -87,7 +88,7 @@ class ConversationManager:
             })
 
             self.save_data()
-            self.update_count += 1  # Pastikan ini di luar blok if `found`
+            self.update_count += 1
             if self.update_count >= self.update_threshold:
                 self.train_vectorizer()
                 self.update_count = 0
@@ -103,7 +104,9 @@ class ConversationManager:
         timestamp = datetime.datetime.utcnow().isoformat() + 'Z'
         self.data["conversations"].append({"question": question, "answer": answer, "timestamp": timestamp, "language": language, "feedback": ""})
         self.save_data()
-        self.train_vectorizer()
+        self.update_count += 1
+        if self.update_count >= self.update_threshold:
+            self.train_vectorizer()
 
 conv_manager = ConversationManager()
 
@@ -120,13 +123,21 @@ def preprocess(text, language='en'):
 
 def generate_response_from_context(question, language='en'):
     lemmatizer = WordNetLemmatizer()
-    stop_words = set(stopwords.words(language))
+    
+    # Menentukan stopwords berdasarkan bahasa input jika tersedia, jika tidak, gunakan bahasa Inggris
+    try:
+        stop_words = set(stopwords.words(language))
+    except:
+        stop_words = set(stopwords.words('english'))
+    
+    # Tokenisasi dan lemmatisasi pertanyaan dengan stopwords
     words = [lemmatizer.lemmatize(word) for word in word_tokenize(question.lower()) if word.isalnum() and word not in stop_words]
     relevant_responses = []
 
     # Cari kalimat dalam data yang memiliki kata kunci yang banyak sama
     for conv in conv_manager.data['conversations']:
-        conv_words = set([lemmatizer.lemmatize(word) for word in word_tokenize(conv['question'].lower()) if word.isalnum() and word not in stop_words])
+        conv_stop_words = set(stopwords.words('english'))
+        conv_words = set([lemmatizer.lemmatize(word) for word in word_tokenize(conv['question'].lower()) if word.isalnum() and word not in conv_stop_words])
         common_words = conv_words.intersection(words)
         if common_words:
             score = len(common_words)
@@ -139,6 +150,11 @@ def generate_response_from_context(question, language='en'):
     relevant_responses.sort(reverse=True, key=lambda x: x[0])
     best_response = relevant_responses[0][1]
     best_question = relevant_responses[0][2]
+
+    # Jika bahasa pengguna bukan 'en', terjemahkan jawaban ke dalam bahasa target
+    if language != 'en':
+        translator = Translator(to_lang=language)
+        best_response = translator.translate(best_response)
 
     # Membuat kalimat baru berdasarkan struktur kalimat pertanyaan dan jawaban terbaik
     return reconstruct_response(best_response, question, best_question)
@@ -173,6 +189,7 @@ def reconstruct_response(best_response, user_question, best_matched_question):
             new_response.append(word)
 
     return ' '.join(new_response)
+    
 def get_response(user_input):
     try:
         language = detect(user_input)
@@ -184,7 +201,7 @@ def get_response(user_input):
         return "Belum ada data yang cukup."
 
     vectors = conv_manager.vectorizer.transform([processed_input])
-    existing_questions = [preprocess(conv["question"], language) for conv in conv_manager.data["conversations"]]
+    existing_questions = [preprocess(conv["question"], conv['language']) for conv in conv_manager.data["conversations"]]  # Gunakan bahasa dari masing-masing pertanyaan yang tersimpan
     question_vectors = conv_manager.vectorizer.transform(existing_questions)
     similarity = cosine_similarity(vectors, question_vectors)
 

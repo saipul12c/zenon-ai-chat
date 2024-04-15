@@ -1,36 +1,38 @@
 $(document).ready(function() {
-    // Event Handler untuk tombol Enter pada input pengguna
-    $('#user-input').on('keydown', function(e) {
+    const chatOutput = $('#chat-output');
+    const userInputField = $('#user-input');
+
+    userInputField.on('keydown', handleUserInput);
+    $('.help-button').on('click', toggleHelpContent).keypress(handleHelpButtonKeypress);
+    $(document).click(hideHelpContentOnClickOutside);
+
+    async function handleUserInput(e) {
         if (e.which === 13 && !e.shiftKey) {
             e.preventDefault();
-            sendQuestion();
+            await sendQuestion();
         }
-    });
+    }
 
-    // Menghandle klik pada tombol untuk menampilkan/menyembunyikan konten bantuan
-    $('.help-button').click(function(event) {
-        event.stopPropagation(); // Menghentikan event dari bubbling ke elemen lain
-        $('.help-content').toggle(); // Menampilkan atau menyembunyikan konten
-    });
+    function toggleHelpContent(event) {
+        event.stopPropagation();
+        $('.help-content').toggle();
+    }
 
-    // Menghandle penekanan tombol keyboard pada tombol bantuan (enter dan spasi)
-    $('.help-button').keypress(function(event) {
-        if (event.key === "Enter" || event.key === " ") { // "Enter" atau spasi
+    function handleHelpButtonKeypress(event) {
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
             $(this).click();
-            event.preventDefault(); // Mencegah scroll halaman jika menekan spasi
         }
-    });
+    }
 
-    // Optional: Menutup pop-up jika klik di luar area konten bantuan
-    $(document).click(function(event) {
+    function hideHelpContentOnClickOutside(event) {
         if (!$(event.target).closest('.help-button, .help-content').length) {
             $('.help-content').hide();
         }
-    });
+    }
 
-    // Mengirimkan pertanyaan pengguna
     async function sendQuestion() {
-        const userInput = $('#user-input').val().trim();
+        const userInput = userInputField.val().trim();
         if (userInput) {
             showLoading(true);
             try {
@@ -48,22 +50,20 @@ $(document).ready(function() {
                 handleServerError(error);
             } finally {
                 showLoading(false);
-                $('#user-input').val('');
+                userInputField.val('');
             }
         }
     }
 
-    // Menambahkan formulir feedback
     function appendFeedbackForm(question) {
         const feedbackFormHtml = `
             <div class="feedback-form">
                 <input type="text" placeholder="Feedback Anda" class="feedback-input" />
                 <button onclick="sendFeedback('${escapeHtml(question)}', this)">Kirim Feedback</button>
             </div>`;
-        $('#chat-output').append(feedbackFormHtml);
+        chatOutput.append(feedbackFormHtml);
     }
 
-    // Mengirim feedback pengguna
     async function sendFeedback(question, buttonElement) {
         const feedbackInput = $(buttonElement).prev('.feedback-input').val().trim();
         if (feedbackInput) {
@@ -84,17 +84,13 @@ $(document).ready(function() {
         }
     }
 
-    // Menampilkan pesan kesalahan server
     function handleServerError(error) {
         const errorMessage = error.responseJSON?.error || error.statusText;
         showError(`Gagal memproses permintaan Anda: ${escapeHtml(errorMessage)}`);
     }
 
-    // Menampilkan pesan di chat
     function displayMessage(message, className) {
-        const chatOutput = $('#chat-output');
-        const messageElement = $(`<div class="${className}"></div>`).appendTo(chatOutput);
-        
+        const messageElement = $('<div>').addClass(className).appendTo(chatOutput);
         let i = 0;
         function typing() {
             if (i < message.length) {
@@ -106,26 +102,22 @@ $(document).ready(function() {
         typing();
     }
 
-    // Menampilkan atau menghilangkan indikator loading
     function showLoading(isLoading) {
         if (isLoading) {
-            $('#chat-output').append('<div id="loading">Loading...</div>');
+            chatOutput.append('<div id="loading">Loading...</div>');
         } else {
             $('#loading').remove();
         }
     }
 
-    // Menampilkan pesan error
     function showError(message) {
-        $('#chat-output').append(`<div class="error">${message}</div>`);
+        chatOutput.append(`<div class="error">${message}</div>`);
     }
 
-    // Gulir chat ke bawah
     function scrollChatToBottom() {
-        $('#chat-output').scrollTop($('#chat-output')[0].scrollHeight);
+        chatOutput.scrollTop(chatOutput[0].scrollHeight);
     }
 
-    // Mencegah XSS dengan meng-escape karakter HTML
     function escapeHtml(text) {
         return text.replace(/[&<>"']/g, match => ({
             '&': '&amp;',

@@ -97,18 +97,17 @@ button:hover {
 }
 
 button {
-    /* Menyesuaikan button yang sudah didefinisikan sebelumnya */
-    background-color: #007BFF; /* Warna latar biru */
-    color: white; /* Warna teks putih */
+    width: 10%; /* Mengatur lebar button */
+    background-color: #007BFF; /* Warna latar button */
+    color: white; /* Warna teks button */
     border: none;
     padding: 10px;
-    cursor: pointer;
-    border-radius: 4px;
-    width: auto; /* Memungkinkan lebar mengikuti konten dalamnya */
+    cursor: pointer; /* Cursor berubah saat di hover */
+    border-radius: 4px; /* Memberi sedikit lengkungan pada sudut */
 }
 
 button:hover {
-    background-color: #0056b3; /* Warna lebih gelap saat di-hover */
+    background-color: #0056b3; /* Warna button saat di-hover */
 }
 
 #loading {
@@ -116,6 +115,11 @@ button:hover {
     padding: 20px;
     color: #007BFF; /* Sesuai dengan warna button */
     font-weight: bold; /* Teks lebih tebal */
+}
+.info {
+    font-size: 0.8em;
+    color: #6c757d; /* Warna teks informasi */
+    padding-top: 8px; /* Memberikan jarak di atas teks */
 }
 
 .help-button {
@@ -137,7 +141,7 @@ button:hover {
 .help-content {
     display: none; /* Sembunyikan secara default */
     position: fixed;
-    bottom: 60px; /* Slightly above the button */
+    bottom: 60px;
     right: 20px;
     width: 200px;
     background-color: white;
@@ -162,17 +166,6 @@ button:hover {
 
 .help-content ul li a:hover {
     background-color: #f0f0f0;
-}
-
-footer {
-    text-align: center;
-    padding: 20px;
-    background-color: #007BFF;
-    color: white;
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
 }
 
 @media (max-width: 600px) {
